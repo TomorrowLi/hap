@@ -1,0 +1,145 @@
+<#include "../include/header.html">
+
+<body>
+
+<script src="${base.contextPath}/lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="${base.contextPath}/common/code?unitCategoryData=HR.EMPLOYEE_GENDER" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+    debugger;
+
+    var employeeCode = "${Session.employeeCode!0}";
+    var viewModel = kendo.observable({
+        model: {
+            enabledFlag:"Y",
+            isEnabled: <#if RequestParameters.businessKey??> false <#else> true </#if>,
+
+    },
+    closeWin: function(e){
+        window.parent.$("#dialog").data("kendoWindow").close();
+    }
+    });
+
+
+
+    var employeeId = '${RequestParameters.businessKey!0}';
+
+
+
+</script>
+<div id="newWin" style="display: none"></div>
+<div id="page-content"  style="overflow:hidden">
+    <form id="mainform"  class="form-horizontal" method="post" enctype="application/json;charset=UTF-8">
+
+        <div class="panel-body" style="padding: 5px">
+            <div class="row">
+                <div class="form-group col-sm-4">
+                    <label class="control-label col-sm-4">发布日期</label>
+                    <div class="col-sm-8">
+                        <input id="activityData" data-bind="enabled:isNameDisabled, value:model.activityData" style="width: 100%;background-color: #ededed;"  />
+                    </div>
+                    <script>
+                        var startDate = $("#activityData").kendoDatePicker({
+                            format:"yyyy-MM-dd HH:mm"
+                        }).data("kendoDatetimePicker");
+                    </script>
+                </div>
+
+                <div style="float:left;margin-right:5px;">
+                    <label class="control-label col-sm-4">活动名称</label>
+                    <div class="col-sm-8">
+                        <input type="text" id="name" placeholder='活动名称'
+                               style="width:150px;" data-bind="enabled:isNameDisabled,value:model.activityName" >
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="row">
+
+
+                <div class="form-group col-sm-4">
+                    <label class="control-label col-sm-4">活动内容</label>
+                    <div class="col-sm-8">
+                        <input id="activityText"  class="k-textbox" data-bind="enabled:isNameDisabled,value:model.activityText" style="width: 100%;background-color: #ededed;" disabled/>
+                    </div>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label class="control-label col-sm-4">管理员工</label>
+                    <div class="col-sm-8">
+                        <input id="activityEmployee"  data-bind="enabled:isNameDisabled,value:model.activityEmployee" style="width: 100%;" />
+                    </div>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label class="control-label col-sm-4">金额</label>
+                    <div class="col-sm-8">
+                        <input id="activityName" class="k-textbox" data-bind="enabled:isNameDisabled,value:model.activiteMoney" style="width: 100%;background-color: #ededed;" disabled="disabled" />
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-4">
+                    <label class="control-label col-sm-4">开始日期</label>
+                    <div class="col-sm-8">
+                        <input id="activityStartData" data-bind="enabled:isNameDisabled,value:model.activityStartData" style="width: 100%;background-color: #ededed;"  />
+                    </div>
+                    <script>
+                        var startDate = $("#activityStartData").kendoDatePicker({
+                            format:"yyyy-MM-dd HH:mm"
+                        }).data("kendoDatetimePicker");
+                    </script>
+                </div>
+
+                <div class="form-group col-sm-4">
+                    <label class="control-label col-sm-4">开始日期</label>
+                    <div class="col-sm-8">
+                        <input id="activityStopData" data-bind="enabled:isNameDisabled,value:model.activityStopData" style="width: 100%;background-color: #ededed;"  />
+                    </div>
+                    <script>
+                        var startDate = $("#activityStopData").kendoDatePicker({
+                            format:"yyyy-MM-dd HH:mm"
+                        }).data("kendoDatetimePicker");
+                    </script>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </form>
+</div>
+<script type="text/javascript">
+    kendo.bind($('#mainBottom'),viewModel);
+    kendo.bind($('#mainform'), viewModel);
+
+    debugger;
+    if (employeeId!=0) {
+
+        viewModel.set("isNameDisabled", false);
+
+        $.ajax({
+            url: '${base.contextPath}/rent/activity/demo1/query?id='+employeeId,
+            success: function (args) {
+                var a0 = args.rows[0] || {};
+                for (var k in a0) {
+
+                    viewModel.model.set(k, a0[k]);
+
+                    /* isNotEmpty(viewModel.model.effectiveStartDate) ? effectiveEndDate.min(viewModel.model.effectiveStartDate) : "";
+                    isNotEmpty(viewModel.model.effectiveEndDate) ? effectiveStartDate.max(viewModel.model.effectiveEndDate) : ""; */
+                }
+
+            }
+        });
+    }else{
+
+        viewModel.set("isNameDisabled", true);
+
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hbi.core.customer.mapper.ActivityCustomerMapper">
+    <resultMap id="BaseResultMap" type="hbi.core.customer.dto.ActivityCustomer">
+        <result column="id" property="id" jdbcType="BIGINT" />
+        <result column="customer_id" property="customerId" jdbcType="BIGINT" />
+        <result column="activity_id" property="activityId" jdbcType="BIGINT" />
+        <result column="application_status" property="applicationStatus" jdbcType="VARCHAR" />
+        <result column="application_date" property="applicationDate" jdbcType="DATE" />
+    </resultMap>
+
+
+
+    <select id="selectActivityByCustomer"  parameterType="hbi.core.customer.dto.ActivityCustomer" resultMap="BaseResultMap">
+        select * from rent_activity_customer where customer_id=#{customerId} and activity_id=#{activityId}
+    </select>
+
+
+    <select id="selectCustomerCount" parameterType="hbi.core.customer.dto.ActivityCustomer" resultMap="BaseResultMap">
+        SELECT rac.*,rc.customer_name,rad.activity_name,COUNT(*) AS COUNT
+        FROM rent_activity_customer AS rac,rent_activity_demo1 AS rad,rent_customer AS rc
+        WHERE rac.customer_id=rc.id
+        AND rac.activity_id=rad.id
+        AND application_status="SECUSS"
+        GROUP BY activity_id
+    </select>
+
+    <select id="selectAllCustomer" parameterType="hbi.core.customer.dto.ActivityCustomer" resultMap="BaseResultMap">
+        SELECT rac.*,rc.customer_name,rad.activity_name
+        FROM rent_activity_customer AS rac,rent_activity_demo1 AS rad,rent_customer AS rc
+        WHERE rac.customer_id=rc.id
+        AND rac.activity_id=rad.id
+        <if test="applicationStatus!=null">
+            AND rac.application_status=#{applicationStatus}
+        </if>
+    </select>
+
+    <select id="queryRoleAll" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT role_id FROM sys_user_role WHERE user_id=#{userId}
+    </select>
+
+
+    <select id="queryApplication" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT rac.*,rc.customer_name,rad.activity_name
+        FROM rent_activity_customer AS rac,rent_activity_demo1 AS rad,rent_customer AS rc
+        WHERE rac.customer_id=rc.id
+        AND rac.activity_id=rad.id
+        AND activity_id=#{activityId}
+    </select>
+</mapper>

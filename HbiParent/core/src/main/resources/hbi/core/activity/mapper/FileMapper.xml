@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hbi.core.activity.mapper.FileMapper">
+    <resultMap id="BaseResultMap" type="com.hand.hap.attachment.dto.SysFile">
+        <result column="FILE_ID" property="fileId" jdbcType="BIGINT" />
+        <result column="ATTACHMENT_ID" property="attachmentId" jdbcType="BIGINT" />
+        <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+        <result column="FILE_PATH" property="filePath" jdbcType="VARCHAR" />
+        <result column="FILE_SIZE" property="fileSize" jdbcType="DECIMAL" />
+        <result column="FILE_TYPE" property="fileType" jdbcType="VARCHAR" />
+        <result column="UPLOAD_DATE" property="uploadDate" jdbcType="DATE" />
+    </resultMap>
+
+
+    <select id="fileDownload" parameterType="java.lang.Long" resultMap="BaseResultMap">
+         SELECT *
+         FROM sys_file
+         WHERE ATTACHMENT_ID=(SELECT ATTACHMENT_ID FROM sys_attachment WHERE source_key=#{activityId})
+    </select>
+
+</mapper>

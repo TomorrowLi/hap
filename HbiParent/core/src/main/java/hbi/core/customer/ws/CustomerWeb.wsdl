@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://impl.service.customer.core.hbi/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns2="http://schemas.xmlsoap.org/soap/http" xmlns:ns1="http://service.customer.core.hbi/" name="customerWeb" targetNamespace="http://impl.service.customer.core.hbi/">
+  <wsdl:import location="http://localhost:8080/ws/CustomerWeb?wsdl=CustomerWeb.wsdl" namespace="http://service.customer.core.hbi/">
+    </wsdl:import>
+  <wsdl:binding name="customerWebSoapBinding" type="ns1:CustomerWeb">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getCustomerBack">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getCustomerBack">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getCustomerBackResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="customerWeb">
+    <wsdl:port binding="tns:customerWebSoapBinding" name="CustomerWebImplPort">
+      <soap:address location="http://localhost:8080/ws/CustomerWeb"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

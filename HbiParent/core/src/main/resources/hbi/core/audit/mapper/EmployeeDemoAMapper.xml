@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hbi.core.audit.mapper.EmployeeDemoAMapper">
+    <resultMap id="BaseResultMap" type="hbi.core.audit.dto.EmployeeDemoA">
+        <result column="EMPLOYEE_ID" property="employeeId" jdbcType="DECIMAL" />
+        <result column="audit_id" property="auditId" jdbcType="VARCHAR" />
+        <result column="EMPLOYEE_CODE" property="employeeCode" jdbcType="VARCHAR" />
+        <result column="NAME" property="name" jdbcType="VARCHAR" />
+        <result column="BORN_DATE" property="bornDate" jdbcType="DATE" />
+        <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+        <result column="MOBIL" property="mobil" jdbcType="VARCHAR" />
+        <result column="JOIN_DATE" property="joinDate" jdbcType="DATE" />
+        <result column="GENDER" property="gender" jdbcType="VARCHAR" />
+        <result column="CERTIFICATE_ID" property="certificateId" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="ENABLED_FLAG" property="enabledFlag" jdbcType="VARCHAR" />
+        <result column="CERTIFICATE_TYPE" property="certificateType" jdbcType="VARCHAR" />
+        <result column="EFFECTIVE_START_DATE" property="effectiveStartDate" jdbcType="DATE" />
+        <result column="EFFECTIVE_END_DATE" property="effectiveEndDate" jdbcType="DATE" />
+        <result column="audit_transaction_type" property="auditTransactionType" jdbcType="VARCHAR" />
+        <result column="audit_timestamp" property="auditTimestamp" jdbcType="DATE" />
+        <result column="audit_session_id" property="auditSessionId" jdbcType="VARCHAR" />
+        <result column="audit_tag" property="auditTag" jdbcType="DECIMAL" />
+        <result column="lang" property="lang" jdbcType="VARCHAR" />
+    </resultMap>
+
+
+
+    <sql id="common">
+        SELECT
+        A.AUDIT_ID,
+        A.AUDIT_TIMESTAMP,
+        A.AUDIT_TRANSACTION_TYPE,
+        A.LANG,
+        A.OBJECT_VERSION_NUMBER,
+
+    </sql>
+    <!-- 用户审计 -->
+    <sql id="auditEmployee">
+        A.EMPLOYEE_ID,
+        A.NAME,
+        A.JOIN_DATE
+        FROM
+        hr_employee_demo_a A
+
+    </sql>
+    <select id="selectAuditEmployee" parameterType="hbi.core.audit.dto.EmployeeDemoA" resultType="java.util.Map" >
+        <include refid="common" />
+        <include refid="auditEmployee" />
+        where
+        A.AUDIT_TAG = 1
+        ORDER BY
+        A.AUDIT_TIMESTAMP DESC
+
+    </select>
+    <select id="selectAuditEmployeeDetail" parameterType="hbi.core.audit.dto.EmployeeDemoA" resultType="java.util.Map" >
+        <include refid="common" />
+        <include refid="auditEmployee" />
+
+        where
+
+        A.EMPLOYEE_ID = #{employeeId}
+
+
+        ORDER BY A.AUDIT_TIMESTAMP DESC
+    </select>
+
+</mapper>

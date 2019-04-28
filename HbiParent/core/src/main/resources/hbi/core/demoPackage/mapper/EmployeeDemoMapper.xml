@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hbi.core.demoPackage.mapper.EmployeeDemoMapper">
+    <resultMap id="BaseResultMap" type="hbi.core.demoPackage.dto.EmployeeDemo">
+        <result column="EMPLOYEE_ID" property="employeeId" jdbcType="DECIMAL" />
+        <result column="EMPLOYEE_CODE" property="employeeCode" jdbcType="VARCHAR" />
+        <result column="NAME" property="name" jdbcType="VARCHAR" />
+        <result column="BORN_DATE" property="bornDate" jdbcType="DATE" />
+        <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+        <result column="MOBIL" property="mobil" jdbcType="VARCHAR" />
+        <result column="JOIN_DATE" property="joinDate" jdbcType="DATE" />
+        <result column="GENDER" property="gender" jdbcType="VARCHAR" />
+        <result column="CERTIFICATE_ID" property="certificateId" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="ENABLED_FLAG" property="enabledFlag" jdbcType="VARCHAR" />
+        <result column="CERTIFICATE_TYPE" property="certificateType" jdbcType="VARCHAR" />
+        <result column="EFFECTIVE_START_DATE" property="effectiveStartDate" jdbcType="DATE" />
+        <result column="EFFECTIVE_END_DATE" property="effectiveEndDate" jdbcType="DATE" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        EMPLOYEE_ID, EMPLOYEE_CODE,NAME, BORN_DATE, EMAIL, MOBIL, JOIN_DATE,GENDER,CERTIFICATE_ID,STATUS,ENABLED_FLAG
+    </sql>
+
+    <select id="queryAll" resultMap="BaseResultMap" parameterType="hbi.core.demoPackage.dto.EmployeeDemo">
+        SELECT
+        E1.EMPLOYEE_ID,
+        E1.EMPLOYEE_CODE,
+        E1.NAME,
+        E1.BORN_DATE,
+        E1.EMAIL,
+        E1.MOBIL,
+        E1.JOIN_DATE,
+        E1.GENDER
+        FROM
+        HR_EMPLOYEE_DEMO E1
+        <where>
+            <if test="employeeCode!=null">
+                AND E1.EMPLOYEE_CODE=#{employeeCode}
+            </if>
+            <if test="gender!=null">
+                AND E1.GENDER=#{gender}
+            </if>
+            <if test="name!=null">
+                AND E1.NAME LIKE CONCAT('%', CONCAT(#{name,jdbcType=VARCHAR}, '%'))
+            </if>
+        </where>
+    </select>
+
+
+
+    <select id="selectId" resultMap="BaseResultMap" parameterType="hbi.core.demoPackage.dto.EmployeeDemo">
+        select
+        EMPLOYEE_CODE,
+        NAME
+        from  HR_EMPLOYEE_DEMO
+        <where>
+            <if test="name != null">
+                name like concat("%",#{name},"%")
+            </if>
+        </where>
+    </select>
+    <select id="queryByCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        *
+        FROM
+        HR_EMPLOYEE_DEMO
+        WHERE
+        upper(EMPLOYEE_CODE) = upper(#{employeeCode})
+    </select>
+
+</mapper>

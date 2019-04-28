@@ -1,0 +1,105 @@
+<#include "../include/header.html">
+<script src="${base.contextPath}/resources/js/echarts.js" ></script>
+<body>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="main1" style="width: 500px;height:300px; float: left "></div>
+<div id="main" style="width: 500px;height:300px; float: right; " ></div>
+
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+    var myChart1 = echarts.init(document.getElementById('main1'));
+    var activityName=[];
+    var count=[];
+    var activityNameCount=[];
+    $.ajax({
+        url: '${base.contextPath}/rent/activity/customer/queryCustomerCount',
+        success: function (args) {
+            debugger
+            var a0 = args.rows;
+            for (var k in a0) {
+                activityName.push(a0[k].activity_name)
+                count.push(a0[k].count)
+                activityNameCount.push({value:a0[k].count,name:a0[k].activity_name})
+            }
+
+
+            // 指定图表的配置项和数据
+            var option = {
+                title: {
+                    text: '活动申请报表'
+                },
+                tooltip: {},
+                legend: {
+                    data:['数量']
+                },
+                xAxis: {
+                    data: activityName
+                },
+                yAxis: {},
+                series: [{
+                    name: '数量',
+                    type: 'bar',
+                    data: count
+                }]
+            };
+
+
+            var option1 = {
+                title : {
+                    text: '用户访问',
+                    //subtext: '纯属虚构',
+                    x:'center'
+                },
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient : 'vertical',
+                    x : 'left',
+                    data:activityName
+                },
+                toolbox: {
+                    show : true,
+                    feature : {
+                        mark : {show: true},
+                        dataView : {show: true, readOnly: false},
+                        magicType : {
+                            show: true,
+                            type: ['pie', 'funnel'],
+                            option: {
+                                funnel: {
+                                    x: '25%',
+                                    width: '50%',
+                                    funnelAlign: 'left',
+                                    max: 1548
+                                }
+                            }
+                        },
+                        restore : {show: true},
+                        saveAsImage : {show: true}
+                    }
+                },
+                calculable : true,
+                series : [
+                    {
+                        name:'申请数量',
+                        type:'pie',
+                        radius : '55%',
+                        center: ['50%', '60%'],
+                        data:activityNameCount
+                    }
+                ]
+            };
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+            myChart1.setOption(option1);
+        }
+    });
+
+
+
+</script>
+</body>
+</html>

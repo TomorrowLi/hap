@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Hand China Co.,Ltd.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd ">
+
+    <!-- WS-Security拦截器 校验用户名密码 -->
+    <bean id="serverInInterceptor" class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+        <constructor-arg>
+            <map>
+                <entry key="action" value="UsernameToken"/>
+                <!-- 密码类型，PasswordText表示明文 ,PasswordDigest加密-->
+                <entry key="passwordType" value="PasswordText"/>
+                <entry key="passwordCallbackRef">
+                    <!-- 回调函数引用 -->
+                    <bean id="serverPasswordCallback" class="com.hand.hap.demo.ws.ServerPasswordCallback">
+                        <!--校验用户名和密码-->
+                        <property name="username" value="admin"></property>
+                        <property name="password" value="admin"></property>
+                    </bean>
+                </entry>
+            </map>
+        </constructor-arg>
+    </bean>
+
+
+
+    <!-- 接口实现,接口管理调用记录中显示接口名称为 productWebService -->
+    <bean id="productService" class="hbi.core.webservice.service.impl.ProductServiceImpl"/>
+    <bean id="customerWeb" class="hbi.core.customer.service.impl.CustomerWebImpl"/>
+    <!-- 接口地址 根据web.xml配置url列表,相对路径是 /ws/ProductWebService -->
+    <jaxws:endpoint id="pro" implementor="#productService" address="/ProductService" >
+        <!-- 开启校验用户名密码   -->
+        <!--<jaxws:inInterceptors>
+            <ref bean="serverInInterceptor"></ref>
+        </jaxws:inInterceptors>-->
+    </jaxws:endpoint>
+
+    <jaxws:endpoint id="pro1" implementor="#customerWeb" address="/CustomerWeb" >
+        <!-- 开启校验用户名密码   -->
+        <!--<jaxws:inInterceptors>
+            <ref bean="serverInInterceptor"></ref>
+        </jaxws:inInterceptors>-->
+    </jaxws:endpoint>
+
+
+</beans>

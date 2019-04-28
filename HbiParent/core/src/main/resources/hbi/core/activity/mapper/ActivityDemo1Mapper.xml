@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hbi.core.activity.mapper.ActivityDemo1Mapper">
+    <resultMap id="BaseResultMap" type="hbi.core.activity.dto.ActivityDemo1">
+        <result column="id" property="id" jdbcType="DECIMAL" />
+        <result column="activity_name" property="activityName" jdbcType="VARCHAR" />
+        <result column="activity_data" property="activityData" jdbcType="DATE" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="activity_start_data" property="activityStartData" jdbcType="DATE" />
+        <result column="activity_stop_data" property="activityStopData" jdbcType="DATE" />
+        <result column="activity_sataus" property="activitySataus" jdbcType="VARCHAR" />
+        <result column="activity_text" property="activityText" jdbcType="VARCHAR" />
+        <result column="user_role" property="userRole" jdbcType="VARCHAR" />
+        <result column="activity_employee" property="activityEmployee" jdbcType="VARCHAR" />
+        <result column="activite_money" property="activiteMoney" jdbcType="DECIMAL" />
+    </resultMap>
+
+
+    <resultMap id="RoleResultMap" type="com.hand.hap.account.dto.Role">
+        <result column="ROLE_ID" property="roleId" jdbcType="DECIMAL"/>
+        <result column="ROLE_CODE" property="roleCode" jdbcType="VARCHAR"/>
+        <result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR"/>
+        <result column="ROLE_DESCRIPTION" property="roleDescription" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="queryAllActivity" resultMap="BaseResultMap" parameterType="hbi.core.activity.dto.ActivityDemo1">
+        SELECT
+        *
+        FROM
+        rent_activity_demo1 E1
+        <where>
+
+            <if test="id!=null">
+                AND E1.id=#{id}
+            </if>
+            <if test="activitySataus!=null">
+                AND E1.activity_sataus=#{activitySataus}
+            </if>
+            <if test="activityData!=null">
+                AND E1.activity_data=#{activityData}
+            </if>
+            <if test="activityStartData!=null">
+
+                <![CDATA[   AND E1.activity_start_data>=#{activityStartData}   ]]>
+            </if>
+            <if test="activityStopData!=null">
+
+                <![CDATA[   AND E1.activity_stop_data <= #{activityStopData}   ]]>
+            </if>
+            <if test="activityName!=null">
+                AND E1.activity_name=#{activityName}
+            </if>
+
+            <!--<if test="name!=null">
+                AND E1.NAME LIKE CONCAT('%', CONCAT(#{name,jdbcType=VARCHAR}, '%'))
+            </if>-->
+            <!--<if test="activitySataus=='STOP'">
+                AND E1.activity_sataus=#{activitySataus}
+            </if>-->
+            AND <![CDATA[ E1.activity_sataus <>  "STOP"]]>
+        </where>
+    </select>
+
+
+    <select id="queryHistoryActivity" resultMap="BaseResultMap" parameterType="hbi.core.activity.dto.ActivityDemo1">
+        SELECT
+        *
+        FROM
+        rent_activity_demo1 E1
+        <where>
+
+            <if test="id!=null">
+                AND E1.id=#{id}
+            </if>
+
+
+            <if test="activityStartData!=null">
+
+                <![CDATA[   AND E1.activity_start_data>=#{activityStartData}   ]]>
+            </if>
+            <if test="activityStopData!=null">
+
+                <![CDATA[   AND E1.activity_stop_data <= #{activityStopData}   ]]>
+            </if>
+            <if test="activityName!=null">
+                AND E1.activity_name=#{activityName}
+            </if>
+
+            <!--<if test="name!=null">
+                AND E1.NAME LIKE CONCAT('%', CONCAT(#{name,jdbcType=VARCHAR}, '%'))
+            </if>-->
+            <!--<if test="activitySataus=='STOP'">
+                AND E1.activity_sataus=#{activitySataus}
+            </if>-->
+            AND E1.activity_sataus = "STOP"
+        </where>
+    </select>
+
+
+
+    <select id="queryEmployee" resultType="hbi.core.demoPackage.dto.EmployeeDemo">
+        SELECT
+        h1.employee_id,
+        h1.NAME,
+        h1.email
+        FROM hr_employee h1, sys_user s1
+        where s1.EMPLOYEE_ID=h1.EMPLOYEE_ID
+        AND s1.USER_ID IN( SELECT user_id FROM sys_user_role WHERE role_id=10002)
+    </select>
+
+
+    <update id="updateById"  parameterType="hbi.core.activity.dto.Comment">
+        update rent_activity_demo1
+        <set>
+            <if test="activitySataus!=null">activity_sataus=#{activitySataus}</if>
+        </set>
+        where id=#{id}
+    </update>
+    
+
+
+    <select id="queryDemo" resultType="hbi.core.activity.dto.Demo">
+        select * from demo;
+    </select>
+
+
+    <select id="selectRole" parameterType="java.lang.Long" resultMap="RoleResultMap">
+        SELECT b.* FROM sys_user_role AS u,sys_role_b AS b WHERE user_id=#{activityId} AND u.ROLE_ID=b.ROLE_ID
+    </select>
+
+    <select id="selectActivityByStatus" resultMap="BaseResultMap">
+        select * from rent_activity_demo1 where activity_sataus="IN_RELEASE";
+    </select>
+
+
+
+
+</mapper>
