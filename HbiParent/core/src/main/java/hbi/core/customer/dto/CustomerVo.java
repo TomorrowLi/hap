@@ -2,7 +2,6 @@ package hbi.core.customer.dto;
 
 import com.hand.hap.account.dto.UserRole;
 import com.hand.hap.attachment.dto.SysFile;
-import org.apache.bcel.verifier.statics.LONG_Upper;
 
 import java.util.List;
 
