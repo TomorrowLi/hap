@@ -5,19 +5,11 @@
 
                                  http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
-    <!--<beans:import resource="oauth2Security.xml"/>-->
-    <!-- 根据项目需求选择使用CAS或标准登录方式  -->
-    <!--<beans:import resource="casSecurity.xml"/>-->
-    <!--<beans:import resource="standardSecurity.xml"/>-->
-
     <beans:bean class="com.hand.hap.security.ResourceAccessor"></beans:bean>
     <!--webservice的权限控制,单独拿出来-->
     <beans:import resource="cxfSecurity.xml"/>
     <!-- 根据项目需求选择使用CAS或标准登录方式  -->
-     <!--<beans:import resource="casSecurity.xml"/>-->
-    <beans:import resource="standardSecurity.xml"/>
-
-
-
+     <beans:import resource="casSecurity.xml"/>
+    <!--<beans:import resource="standardSecurity.xml"/>-->
 
 </beans:beans>
